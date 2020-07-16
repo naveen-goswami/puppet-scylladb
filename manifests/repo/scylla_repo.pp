@@ -5,6 +5,7 @@ class scylla::repo::scylla_repo (
   $key_server = 'keyserver.ubuntu.com',
   $release = 'stretch',
   $repos = 'non-free',
+  $apt_key = '17723034C56D4B19',
   $location = 'https://repositories.scylladb.com/scylla/downloads/scylladb/b956f642-36ba-4ba7-a565-68df8f10acb5/scylla/deb/debian/scylladb-3.0',) {
 
     package { 'gnupg2':
@@ -19,12 +20,12 @@ class scylla::repo::scylla_repo (
           id     => $key_id,
           source => $key_url,
           server => 'keyserver.ubuntu.com',
-          options => 'http-proxy="http://squid.zattoo.com:3128 " --recv-keys 17723034C56D4B19',
+          options => 'http-proxy="http://squid.zattoo.com:3128 " --recv-keys ${apt_key}',
 
         }
 
         apt::source { 'scylla.source.https.list':
-          location => "https://repositories.scylladb.com/scylla/downloads/scylladb/b956f642-36ba-4ba7-a565-68df8f10acb5/scylla/deb/debian/scylladb-3.0",
+          location => $location,
           release  => $::os['distro']['codename'],
           repos    => 'non-free',
           notify   => Exec['apt_update'],
